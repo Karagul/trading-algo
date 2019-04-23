@@ -1,4 +1,4 @@
-import pandas, statistics, numpy, math
+import pandas, statistics, numpy, math, requests, xml.etree.ElementTree
 from scipy import stats
 ie_data = pandas.read_excel('http://www.econ.yale.edu/~shiller/data/ie_data.xls')
 def get_cape(x, date = None):
@@ -40,3 +40,4 @@ def get_gradient_map(write, cape_range = range(96, 384, 12), return_range = rang
 			date = [k for k in cape if k in ret]
 			gradient_map[i][j] = stats.pearsonr(*get_pair(i, j))[0]
 	return gradient_map
+def risk_free_rate(): return float(xml.etree.ElementTree.fromstring(requests.get('https://data.treasury.gov/feed.svc/DailyTreasuryYieldCurveRateData').content).findall('.//{http://schemas.microsoft.com/ado/2007/08/dataservices}BC_3MONTH')[-1].text)/100
